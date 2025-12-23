@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif; font-size: 12px; line-height: 1.4; color: #000; }
+    .container { width: 100%; padding: 20px; }
+    .header { text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 20px; text-decoration: underline; text-underline-position: under; }
+    
+    /* 상단 정보 테이블 */
+    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+    .info-table th, .info-table td { border: 1px solid #000; padding: 5px; }
+    .info-table th { background-color: #eee; text-align: center; font-weight: bold; width: 80px; }
+    
+    /* 품목 테이블 */
+    .item-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .item-table th { border: 1px solid #000; background-color: #eee; padding: 8px; font-weight: bold; text-align: center; border-bottom: 2px solid #000; }
+    .item-table td { border: 1px solid #000; padding: 8px; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    
+    /* 하단 합계 */
+    .total-section { text-align: right; font-size: 16px; font-weight: bold; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">{{ title }}</div>
+    
+    <table class="info-table">
+        <tr>
+            <th rowspan="2">일자</th>
+            <td rowspan="2" class="text-center">{{ date }}</td>
+            <th rowspan="4">공급자</th>
+            <th>등록번호</th>
+            <td colspan="3">{{ supplier.reg_id }}</td>
+        </tr>
+        <tr>
+            <th>상호</th>
+            <td>{{ supplier.name }}</td>
+            <th>성명</th>
+            <td>{{ supplier.ceo }} (인)</td>
+        </tr>
+        <tr>
+            <th rowspan="2">귀하</th>
+            <td rowspan="2" class="text-center"><strong>{{ receiver.name }}</strong><br>({{ receiver.ceo }})</td>
+            <th>주소</th>
+            <td colspan="3">{{ supplier.address }}</td>
+        </tr>
+        <tr>
+            <th>연락처</th>
+            <td colspan="3">{{ supplier.contact }}</td>
+        </tr>
+    </table>
+
+    <div style="border-bottom: 2px solid #000; margin-bottom: 10px; padding: 5px; text-align: right;">
+        견적 금액 : <strong>₩ {{ total_amount }}</strong> (VAT 포함)
+    </div>
+
+    <table class="item-table">
+        <thead>
+            <tr>
+                <th width="40%">품명</th>
+                <th width="15%">규격</th>
+                <th width="10%">수량</th>
+                <th width="15%">단가</th>
+                <th width="20%">공급가액</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td class="text-center">{{ item.spec }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.price }}</td>
+                <td class="text-right">{{ item.total }}</td>
+            </tr>
+            {% endfor %}
+            
+            {% for i in range(10 - items|length) %}
+            <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="text-center" style="background:#eee;">합 계</td>
+                <td class="text-center">{{ total_quantity }}</td>
+                <td class="text-right" style="background:#eee;">공급가</td>
+                <td class="text-right">{{ supply_price }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right" style="background:#eee;">세 액</td>
+                <td class="text-right">{{ tax_amount }}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+{
+  "doc_number": "2025-TEST-001",
+  "date": "2025년 12월 24일",
+  "tax": 10,
+  "receiver": {
+    "name": "테스트 주식회사",
+    "ceo": "홍길동",
+    "reg_id": "123-45-67890",
+    "address": "서울특별시 강남구 테헤란로 123",
+    "contact": "02-1234-5678",
+    "biz_type": "서비스업",
+    "biz_item": "소프트웨어 개발"
+  },
+  "supplier": {
+    "name": "쉼표",
+    "ceo": "나광엽",
+    "reg_id": "508-09-72976",
+    "address": "광주광역시 광산구 소촌로 152번길 53-17",
+    "contact": "010-4223-9227",
+    "email": "info@comma.com",
+    "tel": "062-123-4567",
+    "fax": "062-123-4568",
+    "biz_type": "서비스업",
+    "biz_item": "디자인 및 컨설팅"
+  },
+  "items": [
+    {
+      "name": "웹 애플리케이션 개발",
+      "spec": "React + Node.js",
+      "quantity": 1,
+      "price": "5,000,000"
+    },
+    {
+      "name": "UI/UX 디자인",
+      "spec": "반응형 웹",
+      "quantity": 1,
+      "price": "2,000,000"
+    },
+    {
+      "name": "데이터베이스 설계",
+      "spec": "PostgreSQL",
+      "quantity": 1,
+      "price": "1,500,000"
+    },
+    {
+      "name": "API 서버 구축",
+      "spec": "RESTful API",
+      "quantity": 1,
+      "price": "2,500,000"
+    },
+    {
+      "name": "테스트 및 배포",
+      "spec": "CI/CD 파이프라인",
+      "quantity": 1,
+      "price": "1,000,000"
+    }
+  ]
+}

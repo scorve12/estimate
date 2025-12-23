@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        font-size: 9pt;
+        line-height: 1.5;
+        color: #1a1a1a;
+        background: white;
+    }
+
+    .invoice-box {
+        max-width: 210mm;
+        margin: 0 auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header h1 {
+        font-size: 28pt;
+        font-weight: 300;
+        color: #1a1a1a;
+        letter-spacing: 12px;
+        margin-bottom: 8px;
+    }
+
+    .header-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 8pt;
+        color: #666;
+        margin-top: 10px;
+    }
+
+    .company-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .info-card {
+        padding: 12px 15px;
+        background: #fafafa;
+        border-left: 3px solid #1a1a1a;
+    }
+
+    .info-card h3 {
+        font-size: 8pt;
+        font-weight: 600;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .info-card .company-name {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 6px;
+    }
+
+    .info-card .details {
+        font-size: 8pt;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    table thead {
+        background: #1a1a1a;
+        color: white;
+    }
+
+    table th {
+        padding: 10px 8px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 8pt;
+        letter-spacing: 0.5px;
+        border: none;
+    }
+
+    table td {
+        padding: 9px 8px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 9pt;
+    }
+
+    table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .sum-row {
+        background-color: #fafafa !important;
+        font-weight: 600;
+        border-top: 2px solid #1a1a1a !important;
+        border-bottom: 2px solid #1a1a1a !important;
+    }
+
+    .total-summary {
+        text-align: right;
+        padding: 12px 0;
+        margin-top: 10px;
+        border-top: 2px solid #1a1a1a;
+    }
+
+    .total-summary .label {
+        font-size: 9pt;
+        color: #666;
+        font-weight: 400;
+        margin-right: 15px;
+    }
+
+    .total-summary .amount {
+        font-size: 18pt;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+</style>
+</head>
+<body>
+<div class="invoice-box">
+    <div class="header">
+        <h1>{{ title }}</h1>
+        <div class="header-info">
+            <div>No. {{ doc_number }}</div>
+            <div>{{ date }}</div>
+        </div>
+    </div>
+
+    <div class="company-info">
+        <div class="info-card">
+            <h3>To</h3>
+            <div class="company-name">{{ receiver.name }}</div>
+            <div class="details">
+                {{ receiver.ceo }}<br>
+                {{ receiver.reg_id }}<br>
+                {{ receiver.address }}<br>
+                {{ receiver.contact }}
+            </div>
+        </div>
+        <div class="info-card">
+            <h3>From</h3>
+            <div class="company-name">{{ supplier.name }}</div>
+            <div class="details">
+                {{ supplier.ceo }}<br>
+                {{ supplier.reg_id }}<br>
+                {{ supplier.address }}<br>
+                {{ supplier.contact }}
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="30%">품명</th>
+                <th width="20%">규격</th>
+                <th width="8%">수량</th>
+                <th width="14%">단가</th>
+                <th width="14%">공급가액</th>
+                <th width="14%">세액</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td style="font-size: 8pt; color: #666;">{{ item.spec if item.spec else '-' }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.price }}</td>
+                <td class="text-right">{{ item.total }}</td>
+                <td class="text-right">{{ item.tax_amount }}</td>
+            </tr>
+            {% endfor %}
+            {% for i in range(8 - items|length) %}
+            <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+            {% endfor %}
+
+            <tr class="sum-row">
+                <td colspan="2" class="text-center">TOTAL</td>
+                <td class="text-center">{{ total_quantity }}</td>
+                <td></td>
+                <td class="text-right">{{ supply_price }}</td>
+                <td class="text-right">{{ total_tax_amount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="total-summary">
+        <span class="label">총 합계 (VAT 포함)</span>
+        <span class="amount">{{ total_amount }} 원</span>
+    </div>
+</div>
+</body>
+</html>

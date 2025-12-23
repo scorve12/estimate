@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    body {
+        font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', 'Dotum', sans-serif;
+        margin: 0;
+        padding: 0;
+        font-size: 11px;
+        line-height: 1.2;
+        color: #000;
+    }
+    .page {
+        width: 100%;
+        max-width: 210mm;
+        padding: 0;
+        margin: 0 auto;
+        box-sizing: border-box;
+        background: white;
+    }
+
+    /* 공통 테이블 스타일 */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 4px 6px; border: 1px solid #000; }
+    
+    /* 1. 상단 헤더 영역 */
+    .header-section { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: flex-end; }
+    .header-left { width: 45%; position: relative; }
+    .header-right { width: 52%; }
+
+    .doc-num { font-size: 10px; margin-bottom: 25px; border-bottom: 1px solid #000; width: 45px; }
+    .title { font-size: 30px; font-weight: bold; text-align: center; letter-spacing: 12px; margin-bottom: 15px; }
+    .client-area { font-size: 16px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+    .welcome-msg { font-size: 10px; margin-top: 4px; }
+
+    /* 공급자 테이블 */
+    .supplier-table { font-size: 10px; }
+    .supplier-table th { background-color: #eee; text-align: center; font-weight: normal; padding: 3px 4px; }
+    .supplier-table td { text-align: center; padding: 3px 4px; }
+    .vertical-text { width: 18px; text-align: center; vertical-align: middle; line-height: 1.4; background: #eee; }
+
+    /* 2. 합계 금액 바 */
+    .sum-bar {
+        display: flex; justify-content: space-between; align-items: center;
+        border-top: 2px solid #000; border-bottom: 1px solid #000;
+        padding: 8px 5px; margin-bottom: 0; font-weight: bold; font-size: 12px;
+    }
+    .sum-korean { font-size: 14px; margin-left: 15px; }
+    .sum-number { font-size: 14px; float: right; }
+
+    /* 3. 메인 품목 테이블 */
+    .main-table { margin-top: 0; border-top: none; font-size: 10px; }
+    .main-table th { background: #fff; border-bottom: 1px solid #000; height: 22px; font-size: 11px; padding: 3px 4px; }
+    .main-table td { height: 20px; font-size: 10px; padding: 3px 4px; } /* 행 높이 고정 */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+
+    /* 빈 줄 스타일 */
+    .empty-row td { color: transparent; }
+
+    /* 4. 하단 합계 요약 */
+    .bottom-sum-table { margin-top: 0; border-top: 2px solid #000; font-size: 10px; }
+    .bottom-sum-table td { border-top: none; padding: 6px; font-weight: bold; }
+
+    /* 5. 비고 및 특이사항 */
+    .notes-section { margin-top: 4px; font-size: 9px; line-height: 1.4; border-bottom: 1px solid #000; padding-bottom: 8px; }
+    .notes-title { font-weight: normal; margin-bottom: 4px; }
+    .notes-list { margin: 0; padding-left: 12px; list-style: disc; }
+    .notes-list li { margin-bottom: 2px; }
+
+    /* 6. 하단 담당자 정보 및 푸터 */
+    .contact-table { margin-top: 4px; border-bottom: 2px solid #000; font-size: 10px; }
+    .contact-table th { background: #fff; font-weight: normal; padding: 3px 4px; }
+    .contact-table td { text-align: center; padding: 3px 4px; }
+
+    .footer-logo-area { display: flex; margin-top: 10px; align-items: center; }
+    .footer-logo { font-size: 20px; font-weight: bold; color: #555; margin-right: 15px; }
+    /* 로고 색상 포인트 (오빠두 스타일) */
+    .logo-point { color: #FFA500; }
+    .footer-info { font-size: 9px; color: #555; line-height: 1.3; }
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+    <div style="text-align: center; position: relative; width: 100%; margin-bottom: 10px;">
+        <span class="title">{{ title }}</span>
+    </div>
+
+    <div class="header-section">
+        <div class="header-left">
+            <div class="doc-num">{{ doc_number if doc_number else '101' }}</div>
+            <div style="margin-bottom: 8px; font-size: 12px;">
+                {{ date }}
+            </div>
+            <div class="client-area">
+                <span>{{ receiver.name }}</span>
+                <span style="font-weight: normal; font-size: 14px;">님 귀하</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <table class="supplier-table">
+                <tr>
+                    <td rowspan="4" class="vertical-text">공급자</td>
+                    <th>등록번호</th>
+                    <td colspan="3" style="font-weight: bold; font-size: 11px;">{{ supplier.reg_id }}</td>
+                </tr>
+                <tr>
+                    <th>상 호</th>
+                    <td>{{ supplier.name }}</td>
+                    <th>성 명</th>
+                    <td>{{ supplier.ceo }}</td>
+                </tr>
+                <tr>
+                    <th>주 소</th>
+                    <td colspan="3" style="font-size: 9px;">{{ supplier.address }}</td>
+                </tr>
+                <tr>
+                    <th>업 태</th>
+                    <td>{{ supplier.biz_type if supplier.biz_type else '-' }}</td>
+                    <th>종 목</th>
+                    <td>{{ supplier.biz_item if supplier.biz_item else '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="vertical-text" style="border-top:none; border-bottom:none;"></td>
+                    <th>TEL</th>
+                    <td>{{ supplier.tel if supplier.tel else supplier.contact }}</td>
+                    <th>FAX</th>
+                    <td>{{ supplier.fax if supplier.fax else '-' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="sum-bar">
+        <div style="width: 20%;">합 계 금 액 : <br><span style="font-size:10px; font-weight:normal;">(부가세 포함)</span></div>
+        <div style="width: 80%; text-align: right;">
+            <span class="sum-number" style="font-size: 18px; font-weight: bold;">₩ {{ total_amount }}</span>
+        </div>
+    </div>
+
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th width="5%">번호</th>
+                <th width="35%">품 명</th>
+                <th width="10%">규 격</th>
+                <th width="8%">수 량</th>
+                <th width="14%">단 가</th>
+                <th width="14%">세 액</th>
+                <th width="14%">금 액</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td class="text-center">{{ loop.index }}</td>
+                <td style="padding-left: 10px;">{{ item.name }}</td>
+                <td class="text-center">{{ item.spec }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-right" style="padding-right: 10px;">{{ item.price }}</td>
+                <td class="text-right" style="padding-right: 10px;">{{ item.tax_amount if item.tax_amount else '0' }}</td>
+                <td class="text-right" style="padding-right: 10px;">{{ item.total }}</td>
+            </tr>
+            {% endfor %}
+
+            {% for i in range(12 - items|length) %}
+            <tr class="empty-row">
+                <td class="text-center">-</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right">- 원</td>
+                <td class="text-right">- 원</td>
+                <td class="text-right">- 원</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td colspan="7" class="text-right" style="border-bottom: 2px solid #000; padding-right: 10px;">
+                    {{ total_amount }} 원
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="bottom-sum-table">
+        <tr>
+            <td width="10%">합계 :</td>
+            <td width="23%" class="text-right">{{ total_amount }} 원</td>
+            <td width="10%" style="border-left: 1px solid #000;">계약금 :</td>
+            <td width="23%" class="text-right">{{ down_payment if down_payment else '0' }} 원</td>
+            <td width="10%" style="border-left: 1px solid #000;">잔금 :</td>
+            <td width="23%" class="text-right">{{ balance if balance else total_amount }} 원</td>
+        </tr>
+    </table>
+
+    <div class="notes-section">
+        <div class="notes-title">※ 비고 및 특이사항</div>
+        <ul class="notes-list">
+            <li>견적 유효기간은 발행일로부터 15일입니다.</li>
+            <li>사업자등록증은 팩스 또는 이메일({{ supplier.email if supplier.email else supplier.contact }})로 전달 부탁드립니다.</li>
+            <li>프로그램 커스텀 필요시 제작기간 약 3~15일 소요 / 추가비용 부과됩니다.</li>
+            <li>도서/산간지역의 경우 추가 배송비가 부과됩니다.</li>
+            <li>견적금액은 부가세(VAT) 포함된 가격입니다.</li>
+        </ul>
+    </div>
+
+    <table class="contact-table">
+        <tr>
+            <th>부 서</th>
+            <td>{{ contact.dept if contact and contact.dept else '영업팀' }}</td>
+            <th>담 당</th>
+            <td>{{ contact.name if contact and contact.name else supplier.ceo }}</td>
+            <th>E-mail</th>
+            <td>{{ contact.email if contact and contact.email else supplier.email if supplier.email else '' }}</td>
+        </tr>
+        <tr>
+            <th>TEL</th>
+            <td>{{ supplier.tel if supplier.tel else supplier.contact }}</td>
+            <th>H.P</th>
+            <td>{{ contact.hp if contact and contact.hp else supplier.contact }}</td>
+            <th>FAX</th>
+            <td>{{ supplier.fax if supplier.fax else '' }}</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

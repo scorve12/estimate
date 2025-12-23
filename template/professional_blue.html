@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        font-size: 9pt;
+        line-height: 1.4;
+        color: #2c3e50;
+    }
+
+    .invoice-box {
+        max-width: 210mm;
+        margin: 0 auto;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 18px 20px;
+        margin-bottom: 20px;
+        border-radius: 2px;
+    }
+
+    .header h1 {
+        font-size: 26pt;
+        font-weight: 700;
+        letter-spacing: 4px;
+        margin-bottom: 6px;
+    }
+
+    .header-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 8pt;
+        opacity: 0.95;
+        margin-top: 8px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .info-box {
+        border: 2px solid #3498db;
+        padding: 12px;
+        background: white;
+    }
+
+    .info-box h3 {
+        font-size: 9pt;
+        font-weight: 700;
+        color: white;
+        background: #3498db;
+        padding: 5px 8px;
+        margin: -12px -12px 10px -12px;
+    }
+
+    .info-box .name {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #1e3c72;
+        margin-bottom: 6px;
+    }
+
+    .info-box .detail {
+        font-size: 8pt;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12px;
+        border: 2px solid #3498db;
+    }
+
+    table thead {
+        background: #3498db;
+        color: white;
+    }
+
+    table th {
+        padding: 10px 6px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 9pt;
+        border-right: 1px solid rgba(255,255,255,0.2);
+    }
+
+    table th:last-child {
+        border-right: none;
+    }
+
+    table td {
+        padding: 8px 6px;
+        border: 1px solid #dde4ed;
+        font-size: 9pt;
+    }
+
+    table tbody tr:nth-child(odd) {
+        background-color: #f8fbff;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .sum-row {
+        background: #e3f2fd !important;
+        font-weight: 700;
+        color: #1e3c72;
+        border-top: 2px solid #3498db !important;
+    }
+
+    .summary-box {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 2px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .summary-box .label {
+        font-size: 10pt;
+        font-weight: 500;
+    }
+
+    .summary-box .amount {
+        font-size: 17pt;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+</style>
+</head>
+<body>
+<div class="invoice-box">
+    <div class="header">
+        <h1>{{ title }}</h1>
+        <div class="header-meta">
+            <div>문서번호: {{ doc_number }}</div>
+            <div>발행일: {{ date }}</div>
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <h3>공급받는 자</h3>
+            <div class="name">{{ receiver.name }}</div>
+            <div class="detail">
+                대표자: {{ receiver.ceo }}<br>
+                사업자등록번호: {{ receiver.reg_id }}<br>
+                주소: {{ receiver.address }}<br>
+                연락처: {{ receiver.contact }}
+            </div>
+        </div>
+        <div class="info-box">
+            <h3>공급자</h3>
+            <div class="name">{{ supplier.name }}</div>
+            <div class="detail">
+                대표자: {{ supplier.ceo }}<br>
+                사업자등록번호: {{ supplier.reg_id }}<br>
+                주소: {{ supplier.address }}<br>
+                연락처: {{ supplier.contact }}
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="30%">품명</th>
+                <th width="20%">규격</th>
+                <th width="8%">수량</th>
+                <th width="14%">단가</th>
+                <th width="14%">공급가액</th>
+                <th width="14%">세액</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td style="font-size: 8pt;">{{ item.spec if item.spec else '-' }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.price }}</td>
+                <td class="text-right">{{ item.total }}</td>
+                <td class="text-right">{{ item.tax_amount }}</td>
+            </tr>
+            {% endfor %}
+            {% for i in range(8 - items|length) %}
+            <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+            {% endfor %}
+
+            <tr class="sum-row">
+                <td colspan="2" class="text-center">합 계</td>
+                <td class="text-center">{{ total_quantity }}</td>
+                <td></td>
+                <td class="text-right">{{ supply_price }} 원</td>
+                <td class="text-right">{{ total_tax_amount }} 원</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="summary-box">
+        <div class="label">총 합계 (부가세 포함)</div>
+        <div class="amount">{{ total_amount }} 원</div>
+    </div>
+</div>
+</body>
+</html>
